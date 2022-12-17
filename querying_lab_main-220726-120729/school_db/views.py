@@ -304,19 +304,17 @@ VALUES ('Kyle', 'Harwood', 2022, 3.0)
 # Print the new student's id, full name, and gpa to the terminal
 def problem_six(request):
 
-  # Make sure to set this equal to the primary key of the row you just created!
-  student_id = 11
+    # Make sure to set this equal to the primary key of the row you just created!
+    student_id = 11
 
-  students = Student.objects.all().filter(**id)
-  # .update(gpa = 3.0) 
-  # .filter(id__in = 11)
-  
-  print()
-  print(f"Id: {students.pk} \nFull Name: {students.first_name} {students.last_name} \nGPA: {students.gpa}")
-  print()
+    students = Student.objects.filter(id = student_id).update(gpa = 3.5) 
+    students = Student.objects.get(id = student_id)
 
-  return complete(request)
+    print()
+    print(f"Id: {students.pk} \nFull Name: {students.first_name} {students.last_name} \nGPA: {students.gpa}")
+    print()
 
+    return complete(request)
 
 # Supporting Query Method Documentation:
 """
@@ -362,10 +360,16 @@ def problem_seven(request):
     # Make sure to set this equal to the primary key of the row you just created!
     student_id = 11
 
+    students = Student.objects.filter(id = student_id).delete()
+
+    print()
+
     try:
         student = Student.objects.get(pk=student_id)
     except ObjectDoesNotExist:
         print('Great! It failed and couldnt find the object because we deleted it!')
+    
+    print()
 
     return complete(request)
 
@@ -417,8 +421,18 @@ SELECT `school_db_student`.`id`,
 # Find all of the instructors that only belong to a single course
 # Print out the instructors full name and number of courses to the console
 def bonus_problem(request):
+  
+  instructors = Instructor.objects.annotate(num_classes = Count("course")).filter(num_classes__lt = 2)
 
-    return complete(request)
+  print()
+  print()
+
+  for instructor in instructors:
+    print(f"Instructor Name: {instructor.first_name} {instructor.last_name} ")
+
+  print()
+  print()
+  return complete(request)
 
 
 # Supporting Query Method Documentation:
